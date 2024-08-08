@@ -21,7 +21,7 @@ const server = createServer(app);
 // Middlewares
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://frontend-react-room-app-socket.vercel.app",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
   })
