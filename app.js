@@ -1,31 +1,43 @@
 "use strict";
 
-//Imports
+// Imports
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import "express-async-errors";
+import { createServer } from "http";
 import morgan from "morgan";
+import io from "./config/socket.js";
 import mainRouter from "./routes/index.js";
 
-// variables env
+// Variables env
 const { NODE_ENV, PORT } = process.env;
 
-//WEB API
-//Init
+// WEB API
+// Init
 const app = express();
+const server = createServer(app);
 
-//Middlewares
-app.use(cors({ origin: true }));
+// Middlewares
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 app.use(express.static("public"));
 app.use(express.json());
 app.use(morgan("short"));
 
-//Routing
+// Routing
 app.use("/api", mainRouter);
 
-//Start
-// lancement du serv
-app.listen(PORT, () => {
+// Start
+// Lancement du serveur
+server.listen(PORT, () => {
   console.log(`Web API is running on ${PORT} (${NODE_ENV})`);
 });
+
+// Initialisation de Socket.io
+io.attach(server);
